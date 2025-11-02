@@ -5,21 +5,21 @@ function App() {
   const [seconds, setSeconds] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
 
-  // useEffect hook to handle timer updates
+  // Update timer every second while running
   useEffect(() => {
-    let timer;
+    let timerId;
     if (isRunning) {
-      timer = setInterval(() => {
+      timerId = setInterval(() => {
         setSeconds((prev) => prev + 1);
       }, 1000);
     }
-    return () => clearInterval(timer);
+    return () => clearInterval(timerId);
   }, [isRunning]);
 
-  // Function to format time as M:SS
-  const formatTime = () => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
+  // Format as M:SS
+  const formatTime = (totalSeconds) => {
+    const mins = Math.floor(totalSeconds / 60);
+    const secs = totalSeconds % 60;
     return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
 
@@ -28,22 +28,25 @@ function App() {
   };
 
   const handleReset = () => {
-    setSeconds(0);
     setIsRunning(false);
+    setSeconds(0);
   };
 
   return (
-    <div className="stopwatch-container">
+    <div
+      className="stopwatch-container"
+      style={{ textAlign: "center", marginTop: "50px" }}
+    >
       <h2>Stopwatch</h2>
-      <div className="time-display">
-        <h3>Time</h3>
-        <p className="time">{formatTime()}</p>
-      </div>
-      <div className="buttons">
+      {/* The test expects "Time: 0:00" in one line */}
+      <h3>Time: {formatTime(seconds)}</h3>
+      <div className="buttons" style={{ marginTop: "20px" }}>
         <button onClick={handleStartStop}>
           {isRunning ? "Stop" : "Start"}
         </button>
-        <button onClick={handleReset}>Reset</button>
+        <button onClick={handleReset} style={{ marginLeft: "10px" }}>
+          Reset
+        </button>
       </div>
     </div>
   );
